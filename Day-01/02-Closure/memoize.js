@@ -1,9 +1,11 @@
-function memoize(fn){
+function memoize(fn, context){
 	var cache = {};
-	return function (n){
-		if (typeof cache[n] === 'undefined')
-			cache[n] = fn(n);
-		return cache[n];
+	var context = context || this;
+	return function (){
+        var key = [].join.call(arguments, '-');
+		if (typeof cache[key] === 'undefined')
+			cache[key] = fn.apply(context, arguments);
+		return cache[key];
 	}
 };
 
