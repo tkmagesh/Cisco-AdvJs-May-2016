@@ -148,3 +148,40 @@ describe("Filter", function(){
 		});
 	});
 });
+
+describe("GroupBy", function(){
+	function groupBy(list, keySelector){
+		var result = {};
+		for(var i=0; i<list.length; i++){
+			var key = keySelector(list[i]);
+			if (typeof result[key] === 'undefined')
+				result[key] = [];
+			result[key].push(list[i]);
+		}
+		return result;
+	}
+
+	function printGroup(group){
+		for(var key in group){
+			describe("Key - [" + key + "]", function(){
+				console.table(group[key]);
+			});
+		}
+	}
+
+	describe("Products By Category", function(){
+		var categoryKeySelector = function(product){
+			return product.category;
+		};
+		var productsByCategory = groupBy(products, categoryKeySelector);
+		printGroup(productsByCategory);
+	});
+
+	describe("Products By Cost", function(){
+		var costKeySelector = function(product){
+			return product.cost <= 50 ? "affordable" : "costly";
+		};
+		var productsByCost = groupBy(products, costKeySelector);
+		printGroup(productsByCost);
+	})
+});
